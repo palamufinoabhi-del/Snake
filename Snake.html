@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Snake Click Game</title>
+  <style>
+    canvas {
+      border: 2px solid black;
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Snake Game (Click on Snake to Move)</h2>
+<canvas id="game" width="400" height="400"></canvas>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+let snake = [{x: 200, y: 200}];
+let size = 20;
+let dx = 0;
+let dy = 0;
+
+// Draw snake
+function drawSnake() {
+  ctx.fillStyle = "green";
+  snake.forEach(part => {
+    ctx.fillRect(part.x, part.y, size, size);
+  });
+}
+
+// Move snake
+function moveSnake() {
+  if (dx === 0 && dy === 0) return;
+
+  let head = {
+    x: snake[0].x + dx,
+    y: snake[0].y + dy
+  };
+
+  snake.unshift(head);
+  snake.pop();
+}
+
+// Game loop
+function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  moveSnake();
+  drawSnake();
+}
+
+setInterval(gameLoop, 200);
+
+// CLICK EVENT
+canvas.addEventListener("click", function(e) {
+  let rect = canvas.getBoundingClientRect();
+  let clickX = e.clientX - rect.left;
+  let clickY = e.clientY - rect.top;
+
+  let head = snake[0];
+
+  // Check if click is on snake head
+  if (
+    clickX >= head.x && clickX <= head.x + size &&
+    clickY >= head.y && clickY <= head.y + size
+  ) {
+    // Start moving right
+    dx = size;
+    dy = 0;
+  }
+});
+</script>
+
+</body>
+</html>
